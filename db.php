@@ -32,8 +32,6 @@ if ($mysql->connect_errno) {
             )";
             $mysql->query($create_table_sql);
         }
-    } else {
-        $db_error = "База данных с таким именем не существует: " . DB_NAME . ": " . $mysql->error;
     }
 }
 ?>

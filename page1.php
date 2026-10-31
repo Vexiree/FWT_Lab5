@@ -39,7 +39,7 @@ if ($db_connected) {
                      alt="<?php echo htmlspecialchars($item['term']); ?>"
                      title="<?php echo htmlspecialchars($item['term']); ?>">
               </td>
-              <td class="col-term"><strong><?php echo htmlspecialchars($item['term']); ?></strong></td>
+              <td class="col-term"><?php echo htmlspecialchars($item['term']); ?></td>
               <td class="col-def"><?php echo htmlspecialchars($item['definition']); ?></td>
             </tr>
           <?php endforeach; ?>
