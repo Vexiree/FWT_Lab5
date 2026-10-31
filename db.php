@@ -12,13 +12,6 @@ $db_error = '';
 mysqli_report(MYSQLI_REPORT_OFF);
 $mysql = @new mysqli(DB_HOST, DB_USER, DB_PASSWORD);
 
-if ($mysql->connect_errno && DB_PASSWORD === '') {
-    $mysql = @new mysqli(DB_HOST, DB_USER, 'root');
-    if ($mysql->connect_errno) {
-        $mysql = @new mysqli(DB_HOST, DB_USER, 'QweRtY');
-    }
-}
-
 if ($mysql->connect_errno) {
     $db_error = "Не удалось подключиться к серверу MySQL (" . $mysql->connect_errno . "): " . $mysql->connect_error;
 } else {
@@ -36,11 +29,11 @@ if ($mysql->connect_errno) {
                 `definition` TEXT NOT NULL,
                 `image` VARCHAR(255) NOT NULL,
                 `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
+            )";
             $mysql->query($create_table_sql);
         }
     } else {
-        $db_error = "Не удалось выбрать базу данных " . DB_NAME . ": " . $mysql->error;
+        $db_error = "База данных с таким именем не существует: " . DB_NAME . ": " . $mysql->error;
     }
 }
 ?>

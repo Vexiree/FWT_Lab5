@@ -10,10 +10,21 @@ $added_image = '';
 if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
     $term = trim($_POST['term'] ?? '');
     $definition = trim($_POST['definition'] ?? '');
-    $image = trim($_POST['image'] ?? 'Salad1.svg');
+    $image = '';
 
-    if ($term === '' || $definition === '') {
-        $message = 'Ошибка: Пожалуйста, заполните все обязательные поля (название и определение).';
+    if (!empty($_FILES['image']['name'])) {
+        $image = basename($_FILES['image']['name']);
+        $upload_dir = __DIR__ . '/images/';
+        if (!is_dir($upload_dir)) {
+            mkdir($upload_dir, 0777, true);
+        }
+        move_uploaded_file($_FILES['image']['tmp_name'], $upload_dir . $image);
+    } elseif (!empty($_POST['image'])) {
+        $image = trim($_POST['image']);
+    }
+
+    if ($term === '' || $definition === '' || $image === '') {
+        $message = 'Ошибка: Пожалуйста, заполните все обязательные поля.';
         $is_success = false;
     } else {
         if ($db_connected) {
@@ -36,10 +47,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
             }
         } else {
             $is_success = true;
-            $message = 'Данные успешно проверены! (Сервер MySQL не запущен, запись обработана в демонстрационном режиме)';
-            $added_term = $term;
-            $added_definition = $definition;
-            $added_image = $image;
+            $message = 'Сервер не запущен';
         }
     }
 }
@@ -96,38 +104,22 @@ include 'header.html';
 
     <?php else: ?>
       
-      <form class="form add-form" action="page3.php" method="POST">
+      <form class="form add-form" action="page3.php" method="POST" enctype="multipart/form-data">
         <h2>Добавление нового салата в БД</h2>
-        <p style="text-align: center; color: #ffffff; margin-bottom: 20px;">
-          Заполните форму для отправки данных в таблицу <code>terms</code> базы данных <code>lab5_data</code>:
-        </p>
 
         <div class="form-group">
-          <label for="term">Название (термин):</label>
-          <input type="text" id="term" name="term" class="form-control" placeholder="Например: Салат Мимоза" required>
+          <label for="term">Название:</label>
+          <input type="text" id="term" name="term" class="form-control" placeholder="Салат цезарь" required>
         </div>
 
         <div class="form-group-textarea">
-          <label for="definition">Определение (состав):</label>
-          <textarea id="definition" name="definition" class="form-control" rows="4" placeholder="Подробное описание ингредиентов, заправки и истории..." required></textarea>
+          <label for="definition">Определение:</label>
+          <textarea id="definition" name="definition" class="form-control" rows="4" placeholder="Описание салата" required></textarea>
         </div>
 
         <div class="form-group">
           <label for="image">Изображение:</label>
-          <select id="image" name="image" class="form-control" required>
-            <option value="Salad1.svg">Салат Цезарь (Salad1.svg)</option>
-            <option value="Salad2.svg">Греческий салат (Salad2.svg)</option>
-            <option value="Salad3.svg">Салат Капрезе (Salad3.svg)</option>
-            <option value="Salad4.svg">Салат Оливье (Salad4.svg)</option>
-            <option value="Salad5.svg">Салат Нисуаз (Salad5.svg)</option>
-            <option value="Salad6.svg">Салат Вальдорф (Salad6.svg)</option>
-            <option value="Salad7.svg">Салат Винегрет (Salad7.svg)</option>
-            <option value="Salad8.svg">Салат Табуле (Salad8.svg)</option>
-            <option value="Salad9.svg">Салат Кобб (Salad9.svg)</option>
-            <option value="Salad10.svg">Салат Чука (Salad10.svg)</option>
-            <option value="Salad11.svg">Салат Панцанелла (Salad11.svg)</option>
-            <option value="Salad12.svg">Фруктовый салат (Salad12.svg)</option>
-          </select>
+          <input type="file" id="image" name="image" accept="image/*" required>
         </div>
 
         <div class="submit-group" style="display: flex; gap: 15px; align-items: center;">

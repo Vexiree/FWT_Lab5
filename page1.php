@@ -25,8 +25,8 @@ if ($db_connected) {
           <tr>
             <th style="width: 50px;">№</th>
             <th style="width: 90px;">Фото</th>
-            <th style="width: 200px;">Кулинарный термин</th>
-            <th>Определение и традиционный состав</th>
+            <th style="width: 200px;">Термин</th>
+            <th>Определение и состав</th>
           </tr>
         </thead>
         <tbody>
